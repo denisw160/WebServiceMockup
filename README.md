@@ -1,6 +1,6 @@
 # WebServiceMockup
 
-![Java CI with Maven](https://github.com/denisw160/WebServiceMockup/workflows/Java%20CI%20with%20Maven/badge.svg)
+![CI](https://github.com/denisw160/WebServiceMockup/workflows/CI/badge.svg)
 
 A simple mockup service for test and debugging webservice requests. The project can be build with maven.
 
