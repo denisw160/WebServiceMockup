@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * TODO Write JavaDoc
+ * This is the controller for handling the incoming requests.
  *
  * @author denisw
  * @version 1.0
