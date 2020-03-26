@@ -15,7 +15,7 @@
     <!-- Project -->
     <groupId>me.wirries.webservicemockup</groupId>
     <artifactId>webservicemockup</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <!-- Description -->
     <name>webservicemockup</name>

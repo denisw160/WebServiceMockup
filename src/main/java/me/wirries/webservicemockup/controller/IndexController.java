@@ -1,4 +1,4 @@
-package me.wirries.webservicemockup.config;
+package me.wirries.webservicemockup.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
