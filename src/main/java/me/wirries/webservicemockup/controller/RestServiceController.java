@@ -1,16 +1,25 @@
 package me.wirries.webservicemockup.controller;
 
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * This the rest controller for handle the incoming rest data.
@@ -45,17 +54,23 @@ public class RestServiceController {
      * Send the json object to the server. The object will stored
      * in memory of the server.
      *
-     * @param o object from client
+     * @param json object from client
      */
     @ApiOperation(
             value = "Stores the object on the server",
             notes = "Send the json object to the server. The object will stored in memory of the server."
     )
-    @RequestMapping(value = "/store", method = RequestMethod.POST)
-    public void store(Object o) {
-        objects.add(o);
-        LOGGER.info("Receiving object: {}", o);
-        LOGGER.info("{} objects received", objects.size());
+    @RequestMapping(value = "/store", method = RequestMethod.POST, consumes = "application/json")
+    public void store(@RequestBody String json) {
+        LOGGER.info("Receiving object: {}", json);
+
+        boolean valid = isValid(json);
+        LOGGER.info("JSON Object is valid: {}", valid);
+        if (valid) {
+            JsonNode parse = parse(json);
+            objects.add(parse);
+            LOGGER.info("{} objects received", objects.size());
+        }
     }
 
     /**
@@ -83,6 +98,57 @@ public class RestServiceController {
     public void clean() {
         objects.clear();
         LOGGER.info("List of received objects cleaned");
+    }
+
+    /**
+     * Check if the json string is valid.
+     *
+     * @param json json
+     * @return TRUE if valid
+     */
+    private boolean isValid(final String json) {
+        boolean valid = false;
+        try {
+            final JsonParser parser = new ObjectMapper().getFactory().createParser(json);
+            //noinspection StatementWithEmptyBody
+            while (parser.nextToken() != null) {
+                // do nothing
+            }
+            valid = true;
+        } catch (JsonParseException jpe) {
+            LOGGER.error("Json is not valid: {}", jpe.getMessage());
+        } catch (IOException ioe) {
+            LOGGER.error("Json could not read", ioe);
+        }
+
+        return valid;
+    }
+
+    /**
+     * Parse the string in a json node.
+     *
+     * @param json json as string
+     * @return {{@link JsonNode}}
+     */
+    private JsonNode parse(String json) {
+        JsonFactory factory = new JsonFactory();
+        ObjectMapper mapper = new ObjectMapper(factory);
+
+        try {
+            JsonNode rootNode = mapper.readTree(json);
+
+            System.out.println("Json object has fields: ");
+            Iterator<Map.Entry<String, JsonNode>> fieldsIterator = rootNode.fields();
+            while (fieldsIterator.hasNext()) {
+                Map.Entry<String, JsonNode> field = fieldsIterator.next();
+                System.out.println("Key: " + field.getKey() + "\t\tValue:" + field.getValue());
+            }
+
+            return rootNode;
+        } catch (Exception e) {
+            LOGGER.error("Json could not converted", e);
+            return null;
+        }
     }
 
 }
