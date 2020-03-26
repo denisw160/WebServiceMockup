@@ -1,0 +1,16 @@
+### Spring Boot Configuration ###
+
+### Tomcat Server ###
+server:
+  port: 8080
+
+### Logging ###
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    me.wirries.webservicemockup: DEBUG
+
+### Application Specific Configuration ###
+app:
+  version: @project.version@
