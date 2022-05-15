@@ -1,6 +1,6 @@
 # WebServiceMockup
 
-![maven](https://github.com/denisw160/WebServiceMockup/workflows/maven/badge.svg)
+[![Build with Maven](https://github.com/denisw160/WebServiceMockup/actions/workflows/build.yml/badge.svg)](https://github.com/denisw160/WebServiceMockup/actions/workflows/build.yml)
 
 A simple mockup service for test and debugging webservice requests. The project can be build with maven.
 
